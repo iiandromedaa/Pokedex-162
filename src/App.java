@@ -1,80 +1,99 @@
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception {
 
+        File pkdx = new File("./src/pokemon.csv");
+        ArrayList<String[]> csv = Parser.parseCSV(pkdx);
 
-        String[] pkmnNum;
         //storing these as strings to make my life easier
-        String[] pkmnName;
-        String[] pkmnClass;
-        String[] pkmnType1;
-        String[] pkmnType2;
+        String[] pkmnNum = new String[csv.size()];
+        String[] pkmnName = new String[csv.size()];
+        String[] pkmnClass = new String[csv.size()];
+        String[] pkmnType1 = new String[csv.size()];
+        String[] pkmnType2 = new String[csv.size()];
 
-        String[] dsfd = {"gdsg", "gfdgsdfgdsfg", "aa", "bb", "dd", "zz", "ee"};
-
-        for(int i = 0; i < dsfd.length; i++) {
-            System.out.print(dsfd[i] + ", ");
+        for(int i = 0; i < csv.size(); i++) {
+            pkmnNum[i] = csv.get(i)[0];
+            pkmnName[i] = csv.get(i)[1];
+            pkmnClass[i] = csv.get(i)[2];
+            pkmnType1[i] = csv.get(i)[3];
+            pkmnType2[i] = csv.get(i)[4];
         }
-        strQuickSort(dsfd, 0, dsfd.length-1);
 
         //this might be the last time scanscan gets used this semester
+        //fly high, scanscan :(
         Scanner scanscan = new Scanner(System.in);
+        System.out.print("Welcome to the pokedex, ");
+        while (true) {
+            System.out.println("would you like to search by name or number?");
+            switch(scanscan.next()) {
+            case "name":
+                System.out.println("Enter a name to search by:");
+                int i = find(pkmnName, scanscan.next());
+                if (i == -1) {
+                    System.out.println("No known pokemon by that name");
+                } else {
+                    System.out.print(pkmnName[i] + ", Pokemon number " + pkmnNum[i] + ", " + pkmnClass[i] + ", ");
+                    if (pkmnType2[i].equals("none")) {
+                        System.out.println("Type: " + pkmnType1[i]);
+                    } else {
+                        System.out.println("Type 1: " + pkmnType1[i] + ", Type 2: " + pkmnType2[i]);
+                    }
+                }
+                System.out.println("Would you like to search again? (y/n)");
+                String r = scanscan.next();
+                if (r.equalsIgnoreCase("n")) {
+                    scanscan.close();
+                    System.out.println("Thank you for using the pokedex!");
+                    System.exit(0);
+                }
+                break;
+            case "number":
+                System.out.println("Enter a number to search by:");
+                int inum = find(pkmnNum, scanscan.next());
+                if (inum == -1) {
+                    System.out.println("No known pokemon by that number");
+                } else {
+                    System.out.print(pkmnName[inum] + ", Pokemon number " + pkmnNum[inum] + ", " + pkmnClass[inum] + ", ");
+                    if (pkmnType2[inum].equals("none")){
+                        System.out.println("Type: " + pkmnType1[inum]);
+                    } else {
+                        System.out.println("Type 1: " + pkmnType1[inum] + ", Type 2: " + pkmnType2[inum]);
+                    }
+                }
+                System.out.println("Would you like to search again? (y/n)");
+                String rr = scanscan.next();
+                if (rr.equalsIgnoreCase("n")) {
+                    scanscan.close();
+                    System.out.println("Thank you for using the pokedex!");
+                    System.exit(0);
+                }
+                break;
+            default:
+                scanscan.close();
+                System.out.println("invalid arguments, get outta here");
+                System.exit(0);
+            }
+        }
 
     }
 
+    //i would've done the whole sort arrays together and then binary search to find it faster 
+    //but im feeling lazy and its the last assignment and i already churned out a csv parser
     /**
-     * @param arr1 the array youre using to sort the others
-     * @param arr2 
-     * @param arr3
-     * @param arr4
-     * @param arr5
-     * @param flag set to true if arr1 should be sorted by integer value 
+     * @param arr array to look in
+     * @param find what youre looking for
+     * @return index of found element, -1 if not found
      */
-    static void sortTogether(String[] arr1, String[] arr2, String[] arr3, String[] arr4, String[] arr5, boolean flag) {
-
-    }
-
-    static void strQuickSort(String[] arr, int low, int high) {
-        int i = low;
-        int j = high;
-        String pivot = arr[low + (high - low) / 2];
-        while (i <= j) {
-            while (arr[i].compareToIgnoreCase(pivot) < 0) {
-                i++;
-            }
-            while (arr[j].compareToIgnoreCase(pivot) > 0) {
-                j--;
-            }
-            if (i <= j) {
-                strSwap(arr, i, j);
-                i++;
-                j--;
-            }
-        }
-        //look at this fancy recursion
-        if (low < j) {
-            strQuickSort(arr, low, high);
-        }
-        if (i < low) {
-            strQuickSort(arr, low, high);
-        }
-    }
-
-    static void intQuickSort(int[] arr, int low, int high) {
-        
-    }
-
-    static void strSwap(String[] arr, int i, int j) {
-        String tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
-    }
-
-    static void intSwap(int[] arr, int i, int j) {
-        int tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
+    static int find(String[] arr, String find) {
+        //bracketless code cause it looks cooler
+        for(int i = 0; i < arr.length; i++)
+            if (arr[i].equals(find))
+                return i;
+        return -1;
     }
 
 }
