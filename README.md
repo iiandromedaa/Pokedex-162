@@ -1,0 +1,1 @@
+another assignment for my CS class, supposed to do fileIO and stuff by reading from a csv list of pokemon
